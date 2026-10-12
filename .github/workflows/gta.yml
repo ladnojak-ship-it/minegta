@@ -1,0 +1,39 @@
+name: gta-plugin
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'gta/**'
+  pull_request:
+    paths:
+      - 'gta/**'
+  workflow_dispatch:
+
+jobs:
+  # MCOnly.asi: the GTA V half. A ScriptHookV script plus a D3D11 hook that replaces GTA's picture
+  # with Minecraft's, straight out of the shared memory the passthrough mod publishes.
+  # No ReShade, and no depth compositing: Minecraft's frame simply *is* the screen.
+  build:
+    name: MCOnly.asi (windows, MSVC)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: fetch the ScriptHookV SDK
+        shell: pwsh
+        run: gta/fetch_sdk.ps1
+
+      - name: build
+        run: gta\build.bat
+
+      - name: what was built
+        shell: pwsh
+        run: Get-ChildItem gta\build | Format-Table Name, Length
+
+      - name: capture build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MCOnly-asi
+          path: gta/build/MCOnly.asi
+          if-no-files-found: error

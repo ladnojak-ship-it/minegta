@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "minegta",
+	"version": "${version}",
+	"name": "MineGTA",
+	"description": "Grand Theft Auto in Minecraft: GTA-style HUD (radar, wanted stars, health/armor arcs, cash), GTA weapons with hitscan fire, and an LSPD that wants you dead.",
+	"authors": [
+		"Perimetr"
+	],
+	"contact": {
+		"homepage": "https://github.com/ladnojak-ship-it/minegta",
+		"sources": "https://github.com/ladnojak-ship-it/minegta"
+	},
+	"license": "MIT",
+	"icon": "assets/minegta/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"mgta.MineGTA"
+		],
+		"client": [
+			"mgta.client.MineGTAClient"
+		]
+	},
+	"accessWidener": "minegta.accesswidener",
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

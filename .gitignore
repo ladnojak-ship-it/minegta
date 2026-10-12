@@ -1,0 +1,40 @@
+# gradle / java
+
+.gradle/
+build/
+out/
+classes/
+run/
+hs_err_*.log
+*.hprof
+*.jfr
+
+# the GTA side
+
+gta/build/
+gta/third_party/
+gta/src/*.obj
+gta/*.log
+gta/*.exp
+gta/*.lib
+gta/*.iobj
+gta/*.ipdb
+gta/*.pdb
+
+# ide
+
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+bin/
+.classpath
+.project
+*.launch
+
+# os
+
+*.DS_Store
+Thumbs.db

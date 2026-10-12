@@ -1,0 +1,12 @@
+{
+  "item.minegta.pistol": "Пистолет",
+  "item.minegta.micro_smg": "Микро-пистолет-пулемёт",
+  "item.minegta.pump_shotgun": "Дробовик",
+  "item.minegta.carbine_rifle": "Карабин",
+  "item.minegta.rpg": "РПГ",
+  "item.minegta.ammo_pistol": "Патроны для пистолета",
+  "item.minegta.ammo_smg": "Патроны для УП",
+  "item.minegta.ammo_shell": "Дробовые патроны",
+  "item.minegta.ammo_rifle": "Патроны для винтовки",
+  "item.minegta.ammo_rocket": "Ракета"
+}
