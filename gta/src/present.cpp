@@ -40,13 +40,10 @@ namespace
 	constexpr int kOffPublish = 32;
 	constexpr int kOffLatest = 40;
 
-	using PresentFn = HRESULT(STDMETHODCALLTYPE *)(IDXGISwapChain *, UINT, UINT);
-	using Present1Fn = HRESULT(STDMETHODCALLTYPE *)(IDXGISwapChain1 *, UINT, UINT, const DXGI_PRESENT_PARAMETERS *);
+	typedef HRESULT(WINAPI *PresentFn)(IDXGISwapChain *, UINT, UINT);
 
 	PresentFn g_realPresent = nullptr;
-	Present1Fn g_realPresent1 = nullptr;
 	void **g_vtable = nullptr;
-	void **g_vtable1 = nullptr;
 	bool g_unloading = false;
 
 	bool g_active = true;
@@ -272,7 +269,8 @@ float4 ps_flipped(VSOut input) : SV_TARGET { return g_frameTex.Sample(g_frameSam
 			return false;
 		}
 
-		if (FAILED(device->GetImmediateContext(&g_context)))
+		device->GetImmediateContext(&g_context);
+		if (!g_context)
 		{
 			device->Release();
 			return false;
@@ -591,7 +589,9 @@ float4 ps_flipped(VSOut input) : SV_TARGET { return g_frameTex.Sample(g_frameSam
 
 	// ------------------------------------------------------------ hook
 
-	HRESULT STDMETHODCALLTYPE hookedPresent(IDXGISwapChain *chain, UINT syncInterval, UINT flags)
+	// GTA V Legacy presents through IDXGISwapChain::Present, and so do every other DX11 game worth the
+	// name; one hook is enough.
+	HRESULT WINAPI hookedPresent(IDXGISwapChain *chain, UINT syncInterval, UINT flags)
 	{
 		if (g_active && !g_broken && chain)
 		{
@@ -599,16 +599,6 @@ float4 ps_flipped(VSOut input) : SV_TARGET { return g_frameTex.Sample(g_frameSam
 		}
 
 		return g_realPresent ? g_realPresent(chain, syncInterval, flags) : S_OK;
-	}
-
-	HRESULT STDMETHODCALLTYPE hookedPresent1(IDXGISwapChain1 *chain, UINT syncInterval, UINT flags, const DXGI_PRESENT_PARAMETERS *parameters)
-	{
-		if (g_active && !g_broken && chain)
-		{
-			drawFrame(chain);
-		}
-
-		return g_realPresent1 ? g_realPresent1(chain, syncInterval, flags, parameters) : S_OK;
 	}
 
 	bool installHook()
@@ -649,7 +639,6 @@ float4 ps_flipped(VSOut input) : SV_TARGET { return g_frameTex.Sample(g_frameSam
 
 		ID3D11Device *device = nullptr;
 		IDXGISwapChain *swap = nullptr;
-		IDXGISwapChain1 *swap1 = nullptr;
 		ID3D11DeviceContext *context = nullptr;
 		D3D_FEATURE_LEVEL level = D3D_FEATURE_LEVEL_11_0;
 
@@ -691,22 +680,6 @@ float4 ps_flipped(VSOut input) : SV_TARGET { return g_frameTex.Sample(g_frameSam
 		table[8] = reinterpret_cast<void *>(&hookedPresent);
 		g_vtable = table;
 
-		// Present1 (vtable index 22 on IDXGISwapChain1) for swapchains that use it.
-		if (swap->QueryInterface(__uuidof(IDXGISwapChain1), reinterpret_cast<void **>(&swap1)) == S_OK && swap1)
-		{
-			void **table1 = *reinterpret_cast<void ***>(swap1);
-			DWORD protect1 = 0;
-			if (table1 && table1[22] && VirtualProtect(&table1[22], sizeof(void *), PAGE_READWRITE, &protect1))
-			{
-				g_realPresent1 = reinterpret_cast<Present1Fn>(table1[22]);
-				table1[22] = reinterpret_cast<void *>(&hookedPresent1);
-				g_vtable1 = table1;
-				VirtualProtect(&table1[22], sizeof(void *), protect1, &protect1);
-			}
-
-			swap1->Release();
-		}
-
 		VirtualProtect(&table[8], sizeof(void *), protection, &protection);
 
 		device->Release();
@@ -732,16 +705,6 @@ float4 ps_flipped(VSOut input) : SV_TARGET { return g_frameTex.Sample(g_frameSam
 			{
 				g_vtable[8] = reinterpret_cast<void *>(g_realPresent);
 				VirtualProtect(&g_vtable[8], sizeof(void *), protection, &protection);
-			}
-		}
-
-		if (g_vtable1 && g_realPresent1)
-		{
-			DWORD protection = 0;
-			if (VirtualProtect(&g_vtable1[22], sizeof(void *), PAGE_READWRITE, &protection))
-			{
-				g_vtable1[22] = reinterpret_cast<void *>(g_realPresent1);
-				VirtualProtect(&g_vtable1[22], sizeof(void *), protection, &protection);
 			}
 		}
 

@@ -1,0 +1,4 @@
+classTweaker v2 official
+
+# The LSPD needs to give its cops a goal, and Mob#targetSelector is protected.
+accessible	field	net/minecraft/world/entity/Mob	targetSelector	Lnet/minecraft/world/entity/ai/goal/GoalSelector;

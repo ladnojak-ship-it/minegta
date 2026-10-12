@@ -22,7 +22,7 @@
 			"mgta.client.MineGTAClient"
 		]
 	},
-	"accessWidener": "minegta.accesswidener",
+	"accessWidener": "minegta.classtweaker",
 	"depends": {
 		"fabricloader": ">=0.19.5",
 		"minecraft": "~26.3",
