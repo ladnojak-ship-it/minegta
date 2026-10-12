@@ -78,7 +78,7 @@ public final class SantosWorld {
 		wanted.put(player.getUUID(), now);
 		lastCrime.put(player.getUUID(), server.level().getGameTime());
 
-		server.displayClientMessage(MineGTAText.wanted(now, what), true);
+		server.sendSystemMessage(MineGTAText.wanted(now, what), true);
 		server.level().playSound(null, server.getX(), server.getY(), server.getZ(), SoundEvents.PLAYER_HURT, SoundSource.PLAYERS, 0.6F, 0.5F);
 	}
 
