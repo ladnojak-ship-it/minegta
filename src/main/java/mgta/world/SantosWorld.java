@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import mgta.MineGTA;
+import mgta.MineGTAText;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;

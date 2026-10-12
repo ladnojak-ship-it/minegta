@@ -13,6 +13,9 @@ base {
 loom {
 	splitEnvironmentSourceSets()
 
+	// minegta.classtweaker: the LSPD's cop goal needs Mob#targetSelector, which is protected
+	accessWidenerPath = file("src/main/resources/minegta.classtweaker")
+
 	mods {
 		"minegta" {
 			sourceSet sourceSets.main
