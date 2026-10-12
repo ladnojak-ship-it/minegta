@@ -66,7 +66,7 @@ public final class GtaHud {
 		Minecraft minecraft = Minecraft.getInstance();
 		LocalPlayer player = minecraft.player;
 
-		if (player == null || minecraft.level == null || minecraft.screen != null || minecraft.options.hideGui) {
+		if (player == null || minecraft.level == null || minecraft.gui.screen() != null || minecraft.gui.hud.isHidden()) {
 			return;
 		}
 
@@ -92,7 +92,7 @@ public final class GtaHud {
 		Set<Integer> cops = new HashSet<>();
 		Set<Integer> hostiles = new HashSet<>();
 
-		for (Entity entity : player.level().entitiesForRendering()) {
+		for (Entity entity : player.level().getEntitiesOfClass(net.minecraft.world.entity.Entity.class, player.getBoundingBox().inflate(64.0))) {
 			if (player.distanceToSqr(entity) > RADAR_RANGE * RADAR_RANGE) {
 				continue;
 			}
@@ -141,7 +141,7 @@ public final class GtaHud {
 
 		drawArc(graphics, RADAR_X, RADAR_Y, RADAR_RADIUS, 2, 0xFF000000, 0, 360);
 
-		for (Entity entity : player.level().entitiesForRendering()) {
+		for (Entity entity : player.level().getEntitiesOfClass(net.minecraft.world.entity.Entity.class, player.getBoundingBox().inflate(64.0))) {
 			if (entity == player || player.distanceToSqr(entity) > (double) RADAR_RANGE * RADAR_RANGE) {
 				continue;
 			}
