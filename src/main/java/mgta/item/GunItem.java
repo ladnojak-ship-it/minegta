@@ -67,9 +67,9 @@ public class GunItem extends Item {
 
 			if (spec.spread() > 0.0F) {
 				direction = direction.add(
-						(level.random.nextDouble() - 0.5) * spec.spread() * 2.0,
-						(level.random.nextDouble() - 0.5) * spec.spread() * 2.0,
-						(level.random.nextDouble() - 0.5) * spec.spread() * 2.0).normalize();
+						(level.getRandom().nextDouble() - 0.5) * spec.spread() * 2.0,
+						(level.getRandom().nextDouble() - 0.5) * spec.spread() * 2.0,
+						(level.getRandom().nextDouble() - 0.5) * spec.spread() * 2.0).normalize();
 			}
 
 			Vec3 end = eye.add(direction.scale(spec.range()));
@@ -107,7 +107,7 @@ public class GunItem extends Item {
 
 				if (target instanceof LivingEntity body) {
 					body.push(direction.x * 0.35, 0.32, direction.z * 0.35);
-					body.invulnerableTime = 0;
+					// vanilla's hit cooldown is plenty here
 				}
 			}
 
@@ -130,8 +130,8 @@ public class GunItem extends Item {
 		}
 
 		for (int i = 0; i < 28; i++) {
-			double salsa = level.random.nextDouble() * Math.PI * 2.0;
-			double lift = level.random.nextDouble() * 0.9;
+			double salsa = level.getRandom().nextDouble() * Math.PI * 2.0;
+			double lift = level.getRandom().nextDouble() * 0.9;
 			level.addParticle(ParticleTypes.FLAME,
 					at.x, at.y + 0.2, at.z,
 					Math.cos(salsa) * 0.6, lift, Math.sin(salsa) * 0.6);

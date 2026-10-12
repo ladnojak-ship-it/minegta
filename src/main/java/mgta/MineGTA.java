@@ -3,7 +3,7 @@ package mgta;
 import mgta.item.ModItems;
 import mgta.world.SantosWorld;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.slf4j.Logger;
@@ -25,17 +25,17 @@ public class MineGTA implements ModInitializer {
 		ModItems.init();
 		SantosWorld.init();
 
-		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
-			entries.accept(ModItems.PISTOL);
-			entries.accept(ModItems.MICRO_SMG);
-			entries.accept(ModItems.PUMP_SHOTGUN);
-			entries.accept(ModItems.CARBINE_RIFLE);
-			entries.accept(ModItems.RPG);
-			entries.accept(ModItems.AMMO_PISTOL);
-			entries.accept(ModItems.AMMO_SMG);
-			entries.accept(ModItems.AMMO_SHELL);
-			entries.accept(ModItems.AMMO_RIFLE);
-			entries.accept(ModItems.AMMO_ROCKET);
+		CreativeModeTabEvents.modifyOutputEvent(CreativeModeTabs.COMBAT).register(output -> {
+			output.accept(ModItems.PISTOL);
+			output.accept(ModItems.MICRO_SMG);
+			output.accept(ModItems.PUMP_SHOTGUN);
+			output.accept(ModItems.CARBINE_RIFLE);
+			output.accept(ModItems.RPG);
+			output.accept(ModItems.AMMO_PISTOL);
+			output.accept(ModItems.AMMO_SMG);
+			output.accept(ModItems.AMMO_SHELL);
+			output.accept(ModItems.AMMO_RIFLE);
+			output.accept(ModItems.AMMO_ROCKET);
 		});
 
 		LOGGER.info("MineGTA loaded: welcome to San Andreas, in cubes.");

@@ -20,7 +20,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -29,7 +29,7 @@ import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 
 /**
@@ -171,12 +171,12 @@ public final class SantosWorld {
 			return;
 		}
 
-		Villager cop = EntityType.VILLAGER.create(level, EntitySpawnReason.EVENT);
+		Villager cop = EntityTypes.VILLAGER.create(level, EntitySpawnReason.EVENT);
 		if (cop == null) {
 			return;
 		}
 
-		cop.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, level.random.nextFloat() * 360.0F, 0.0F);
+		cop.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, level.getRandom().nextFloat() * 360.0F, 0.0F);
 		cop.setCustomName(Component.literal(COP_NAME));
 		cop.setCustomNameVisible(true);
 		cop.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
@@ -194,12 +194,12 @@ public final class SantosWorld {
 				continue;
 			}
 
-			Villager cop = EntityType.VILLAGER.create(level, EntitySpawnReason.EVENT);
+			Villager cop = EntityTypes.VILLAGER.create(level, EntitySpawnReason.EVENT);
 			if (cop == null) {
 				continue;
 			}
 
-			cop.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, level.random.nextFloat() * 360.0F, 0.0F);
+			cop.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, level.getRandom().nextFloat() * 360.0F, 0.0F);
 			cop.setCustomName(Component.literal(COP_NAME));
 			cop.setCustomNameVisible(true);
 			cop.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
@@ -217,12 +217,12 @@ public final class SantosWorld {
 			return;
 		}
 
-		Villager ped = EntityType.VILLAGER.create(level, EntitySpawnReason.EVENT);
+		Villager ped = EntityTypes.VILLAGER.create(level, EntitySpawnReason.EVENT);
 		if (ped == null) {
 			return;
 		}
 
-		ped.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, level.random.nextFloat() * 360.0F, 0.0F);
+		ped.snapTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, level.getRandom().nextFloat() * 360.0F, 0.0F);
 		ped.setPersistenceRequired();
 
 		level.addFreshEntity(ped);
@@ -236,11 +236,11 @@ public final class SantosWorld {
 
 	private static BlockPos randomGround(ServerLevel level, ServerPlayer player, double radius) {
 		for (int attempt = 0; attempt < 8; attempt++) {
-			double angle = level.random.nextDouble() * Math.PI * 2.0;
-			double distance = 8.0 + level.random.nextDouble() * (radius - 8.0);
+			double angle = level.getRandom().nextDouble() * Math.PI * 2.0;
+			double distance = 8.0 + level.getRandom().nextDouble() * (radius - 8.0);
 			int x = Mth.floor(player.getX() + Math.cos(angle) * distance);
 			int z = Mth.floor(player.getZ() + Math.sin(angle) * distance);
-			BlockPos at = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, new BlockPos(x, player.getBlockY(), z));
+			BlockPos at = new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING, x, z), z);
 
 			if (at.getY() > level.getMinY() && Math.abs(at.getY() - player.getY()) < 24.0) {
 				return at.above();
