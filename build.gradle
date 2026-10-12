@@ -13,8 +13,6 @@ base {
 loom {
 	splitEnvironmentSourceSets()
 
-	accessWidenerPath = file("src/main/resources/minegta.accesswidener")
-
 	mods {
 		"minegta" {
 			sourceSet sourceSets.main
